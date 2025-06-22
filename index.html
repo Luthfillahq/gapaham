@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media Interaktif: Barisan dan Deret</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .question {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    .choices button, .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .submit-btn {
+      background-color: #4caf50;
+      color: white;
+    }
+    .progress {
+      background: #eee;
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+    .progress-bar {
+      height: 16px;
+      background: #4caf50;
+      width: 0%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="text-align:center;color:#007bff">🎲 Media Interaktif: Barisan dan Deret</h1>
+    <p style="text-align:center">Disusun oleh Kelompok 1: Luthfi, Sylvi, Akmal, Bella, Alya, Annisa</p>
+    <div id="app">
+      <div id="questionBox"></div>
+      <input type="text" id="inputAnswer" style="display:none;width:100%;padding:10px;margin:10px 0;border-radius:8px" placeholder="Jawaban Anda...">
+      <div id="choicesBox"></div>
+      <button class="submit-btn" onclick="nextQuestion()">Kirim Jawaban</button>
+      <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
+      <div id="scoreBox" style="display:none;text-align:center;font-size:1.2rem;font-weight:bold"></div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { q: "Tentukan suku ke-10 dari barisan: 5, 8, 11, 14, …", a: "32", type: "input" },
+      { q: "Jika jumlah 5 suku pertama dari deret aritmetika adalah 75, dan suku pertama 5, berapa bedanya?", a: "5", type: "input" },
+      { q: "Barisan geometri: 16, 8, 4, … Hitung jumlah tak hingga!", a: "32", type: "input" },
+      { q: "Apa jenis barisan dari urutan angka berikut: 2, 4, 8, 16, …?", a: "Geometri", type: "choice", choices: ["Aritmetika", "Geometri", "Campuran", "Tak beraturan"] },
+      { q: "Jika U1 = 3 dan beda = 4, maka U5 = ?", a: "19", type: "choice", choices: ["15", "17", "19", "20"] },
+    ];
+
+    let step = 0;
+    let score = 0;
+
+    function renderQuestion() {
+      const q = questions[step];
+      document.getElementById("questionBox").innerHTML = `<div class='question'><b>Petak ${step+1}</b>: ${q.q}</div>`;
+      document.getElementById("inputAnswer").style.display = q.type === "input" ? "block" : "none";
+      document.getElementById("inputAnswer").value = "";
+      const box = document.getElementById("choicesBox");
+      box.innerHTML = "";
+      if (q.type === "choice") {
+        q.choices.forEach(choice => {
+          const btn = document.createElement("button");
+          btn.textContent = choice;
+          btn.className = "choices button";
+          btn.onclick = () => submitAnswer(choice);
+          box.appendChild(btn);
+        });
+      }
+      document.getElementById("progressBar").style.width = `${(step / questions.length) * 100}%`;
+    }
+
+    function submitAnswer(answer) {
+      const q = questions[step];
+      const userAns = answer || document.getElementById("inputAnswer").value.trim();
+      if (userAns.toLowerCase() === q.a.toLowerCase()) score += 20;
+      step++;
+      if (step < questions.length) {
+        renderQuestion();
+      } else {
+        document.getElementById("app").innerHTML = `<h2 style='text-align:center;color:#4caf50'>🎉 Selesai!</h2><p style='text-align:center'>Skor Anda: <span style='font-size:2rem;color:#007bff'>${score}</span>/100</p>`;
+      }
+    }
+
+    function nextQuestion() {
+      submitAnswer();
+    }
+
+    renderQuestion();
+  </script>
+</body>
+</html>
